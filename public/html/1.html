@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第二页</title>
+</head>
+
+<body>
+    <input type="text" />
+    <button id="btn" style="overflow: hidden;">111</button>
+    <button id="close">关闭</button>
+    <button id="send">发送</button>
+    <script>
+        function send() {
+            let data = new FormData();
+            data.append('hello', 'world');
+
+            fetch('/users/del', {
+                method: 'delete',
+                body: data,
+                headers: {
+                    type: 'application/json'
+                },
+                credentials: 'include',
+                keepalive: true,
+            })
+        }
+        function sendBeacon() {
+            let data = new FormData();
+            data.append('hello', 'world');
+            navigator.sendBeacon('/users/post', data);
+        }
+        function resquest() {
+            var request = new XMLHttpRequest();
+            request.open('POST', '/users/post', false);
+            request.setRequestHeader('type', 'application/json');
+            request.send(JSON.stringify({hello: 'world'}));
+        }
+        document.getElementById('btn').addEventListener('click', () => console.log('111'))
+        document.getElementById('close').addEventListener('click', () => window.close())
+        document.getElementById('send').addEventListener('click', resquest)
+        document.getElementById('btn').click()
+        window.onbeforeunload = function (e) {
+            e.preventDefault();
+            e = e || window.event;
+            if (e) {
+                e.returnValue = '关闭提示';
+            }
+
+            // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
+            return false;
+        };
+        window.addEventListener('unload', resquest)
+    </script>
+    <!-- <script language="javascript">
+        //防止页面后退
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function (e) {
+            console.log('pop', e)
+            history.pushState(null, null, document.URL);
+        });
+    </script> -->
+</body>
+
+</html>
